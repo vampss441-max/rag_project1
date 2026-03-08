@@ -91,7 +91,7 @@ if not api_key:
 # embeddings and llm initialization
 
 embeddings = HuggingFaceEmbeddings(
-    hf_model = st.secrets["HF_MODEL"]
+hf_model = st.secrets["HF_MODEL"]
     encode_kwargs={"normalize_embeddings": True}
 )
 
