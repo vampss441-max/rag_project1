@@ -90,8 +90,10 @@ if not api_key:
 
 # embeddings and llm initialization
 
+hf_model = st.secrets["HF_MODEL"]   # <-- top-level, safe
+
 embeddings = HuggingFaceEmbeddings(
-hf_model = st.secrets["HF_MODEL"]
+    model_name=hf_model,            # <-- pass variable here
     encode_kwargs={"normalize_embeddings": True}
 )
 
