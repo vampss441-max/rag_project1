@@ -15,6 +15,18 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
 # =========================
+# Minimal Unicode Cleanup
+# =========================
+
+def clean_text(text):
+    """
+    Ensure string is safe for Groq API by removing problematic characters.
+    """
+    if not isinstance(text, str):
+        return text
+    return text.encode("utf-8", "ignore").decode("utf-8")
+
+# =========================
 # JSON Persistent Memory
 # =========================
 
@@ -162,7 +174,7 @@ def _join_docs(docs, max_chars=7000):
     total = 0
 
     for d in docs:
-        piece = d.page_content
+        piece = clean_text(d.page_content)  # <-- clean here
 
         if total + len(piece) > max_chars:
             break
@@ -217,6 +229,9 @@ session_id = st.text_input(" 🆔 Session ID ", value="default_session")
 
 user_q = st.chat_input("💬 Ask a question...")
 
+if user_q:
+    user_q = clean_text(user_q)  # <-- clean user input
+
 # ── Chat Execution ─────────────────────────────
 
 if user_q:
@@ -230,7 +245,7 @@ if user_q:
         input=user_q
     )
 
-    standalone_q = llm.invoke(rewrite_msgs).content.strip()
+    standalone_q = clean_text(llm.invoke(rewrite_msgs).content.strip())  # <-- clean rewritten query
 
     # Retrieve chunks
 
@@ -253,7 +268,7 @@ if user_q:
 
     # Build context string
 
-    context_str = _join_docs(docs)
+    context_str = clean_text(_join_docs(docs))  # <-- clean context
 
     # Ask final question
 
