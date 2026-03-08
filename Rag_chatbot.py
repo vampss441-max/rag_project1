@@ -81,8 +81,8 @@ with st.sidebar:
     api_key_input = st.text_input("Groq API Key", type="password")
     st.caption("Upload PDFs -> Ask questions -> Get Answers")
 
-# Accept key from input or .env
-api_key = api_key_input or os.getenv("GROQ_API_KEY")
+# Accept key from input 
+api_key = api_key = st.secrets["GROQ_API_KEY"]
 
 if not api_key:
     st.warning(" Please enter your Groq API Key (or set GROQ_API_KEY in .env) ")
@@ -91,7 +91,7 @@ if not api_key:
 # embeddings and llm initialization
 
 embeddings = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2",
+    hf_model = st.secrets["HF_MODEL"]
     encode_kwargs={"normalize_embeddings": True}
 )
 
